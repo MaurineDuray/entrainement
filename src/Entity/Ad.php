@@ -3,10 +3,15 @@
 namespace App\Entity;
 
 use App\Repository\AdRepository;
+use Cocur\Slugify\Slugify;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AdRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+
 class Ad
 {
     #[ORM\Id]
@@ -34,6 +39,24 @@ class Ad
 
     #[ORM\Column]
     private ?int $rooms = null;
+
+    #[ORM\OneToMany(mappedBy: 'ad', targetEntity: Image::class, orphanRemoval: true)]
+    private Collection $name;
+
+    public function __construct()
+    {
+        $this->name = new ArrayCollection();
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function initializeSlug():void
+    {
+        if(empty($this->slug)){
+            $slugify = new Slugify();
+            $this->slug = $slugify->slugify($this->title);
+        }
+    }
 
     public function getId(): ?int
     {
@@ -120,6 +143,36 @@ class Ad
     public function setRooms(int $rooms): self
     {
         $this->rooms = $rooms;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Image>
+     */
+    public function getName(): Collection
+    {
+        return $this->name;
+    }
+
+    public function addName(Image $name): self
+    {
+        if (!$this->name->contains($name)) {
+            $this->name->add($name);
+            $name->setAd($this);
+        }
+
+        return $this;
+    }
+
+    public function removeName(Image $name): self
+    {
+        if ($this->name->removeElement($name)) {
+            // set the owning side to null (unless already changed)
+            if ($name->getAd() === $this) {
+                $name->setAd(null);
+            }
+        }
 
         return $this;
     }
