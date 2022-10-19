@@ -1,26 +1,22 @@
-
-
 {% extends "base.html.twig" %}
 
-{% block title %}Création d'une annonce{% endblock %}
-
+{% block title %}Modification de l'annonce: {{ad.title}}{% endblock %}
 
 {% form_theme myform 'ad/_collection.html.twig' %}
+{# appel du fichier _collection.html.twig pour afficher le formulaire  #}
 
 {% block body %}
     <div class="container">
-        <h1>Création d'une nouvelle annonce</h1>
+        <h1>Modification de l'annonce: {{ad.title}}</h1>
         {{form_start(myform)}}
             <div class="container">
                 <div>
                     {{form_widget(myform)}}
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary mt-3">Création d'une annonce</button>
         {{form_end(myform)}}
     </div>
 {% endblock %}
-
 
 
 
@@ -29,3 +25,4 @@
     {# appel du javascript qui commande le formulaire (asset>js>ad.js) #}
     {{encore_entry_script_tags('annonce')}}
 {% endblock %}
+

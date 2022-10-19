@@ -3,14 +3,17 @@
 namespace App\Form;
 
 use App\Entity\Ad;
+use App\Form\ImageType;
+
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class AnnonceType extends AbstractType
 {
@@ -42,6 +45,14 @@ class AnnonceType extends AbstractType
             ->add('content', TextareaType::class, $this->getConfiguration('Description détaillée', "Donnez une description de votre bien"))
             ->add('coverImage', UrlType::class, $this->getConfiguration("L'url de l'image","Donnez l'adresse de votre image"))
             ->add('rooms', IntegerType::class, $this->getConfiguration('Prix par nuit','Indiquer le prix que vous voulez pour une nuit'))
+            ->add(
+                'images',
+                CollectionType::class,[
+                    'entry_type' =>ImageType::class,
+                    'allow_add'=>true,
+                    'allow_delete'=>true 
+                ]
+            )
         ;
     }
 
