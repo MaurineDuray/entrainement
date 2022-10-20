@@ -19,6 +19,16 @@ security:
         main:
             lazy: true
             provider: app_user_provider
+            form_login: 
+                login_path: account_login
+                check_path: account_login
+            logout: 
+                path: account_logout
+                target: account_login
+
+            login_throttling: #blocage après trois erreurs à la connexion
+                max_attempts: 3 #nombre d'essais maximum
+                interval: '15 minutes' #temps d'attente après 3essais
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
